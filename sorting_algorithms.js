@@ -1,6 +1,6 @@
 const BOX_COUNT = 29;
 const BOXROW_COUNT = 4;
-const DELAY_TIME = 150; //in millisecond
+const DELAY_TIME = 100; //in millisecond
 
 //Generate boxes for all rows
 function generateBoxes() {
@@ -15,7 +15,7 @@ function generateBoxes() {
       div.setAttribute('class','box');
       element.appendChild(div);
       //Debugging purpose
-      console.log(div);
+      //console.log(div);
     }
   }
   //Disable the button
@@ -159,7 +159,19 @@ function insertionSort(rowNum) {
       console.log("Insertion sort has taken " + time + " seconds to complete execution.")
     }
   }
-  var interval = setInterval(frame,DELAY_TIME);
+  var interval = setInterval(frame,6*DELAY_TIME);
+}
+
+// Recursive merge sort
+function mergeSort(arr) {
+  if (arr.length > 1) {
+    var midpoint = Math.floor(arr.length/2);
+    var lowHalf = mergeSort(arr.slice(0,midpoint));
+    var highHalf = mergeSort(arr.slice(midpoint,arr.length));
+    return merge(lowHalf,highHalf);
+  } else {
+    return arr;
+  }
 }
 
 function merge(arr1, arr2) {
@@ -181,15 +193,64 @@ function merge(arr1, arr2) {
   return merged;
 }
 
-function mergeSort(arr) {
-  if (arr.length > 1) {
-    var midpoint = Math.floor(arr.length/2);
-    var lowHalf = mergeSort(arr.slice(0,midpoint));
-    var highHalf = mergeSort(arr.slice(midpoint,arr.length));
-    return merge(lowHalf,highHalf);
-  } else {
-    return arr;
+function highLightGroup(groupSize,rowNum) {
+  setAllWhite(rowNum);
+  var yellow = '#FAFAD2';
+  var orange = '#FCD116';
+  // Divide elements into groups of 2,4,8,16,etc...
+  // and give them alternating colors
+  var setYellow = true;
+  var setOrange = true;
+  for (var i = 1; i <= BOX_COUNT; i += groupSize) {
+    var iBox = document.getElementById('row' + rowNum + 'box' + i);
+    if (setYellow) {
+      iBox.style.backgroundColor = yellow;
+      for (var j = 1; j < groupSize; j++) {
+        if (i+j <= BOX_COUNT) {
+          var adjBox = document.getElementById('row' + rowNum + 'box' + (i+j));
+          adjBox.style.backgroundColor = yellow;
+        }
+      }
+      setYellow = false;
+      setOrange = true;
+    } else if (setOrange) {
+      iBox.style.backgroundColor = orange;
+      for (var j = 1; j < groupSize; j++) {
+        if (i+j <= BOX_COUNT) {
+          var adjBox = document.getElementById('row' + rowNum + 'box' + (i+j));
+          adjBox.style.backgroundColor = orange;
+        }
+      }
+      setYellow = true;
+      setOrange = false;
+    }
   }
+}
+
+function nonrecursiveMerge(rowNum) {
+  // Setup: divide elements into groups of 1, give them alternating colors
+  var groupSize = 1;
+  // Animate the process of merging small groups into bigger groups
+  // merge 1's into 2's, merge 2's into 4's, merge 4's into 8's so on...
+  function mergeFrame() {
+    highLightGroup(groupSize,rowNum);
+    var numArr = getArray(rowNum);
+    if (groupSize >= BOX_COUNT) {
+      clearInterval(interval);
+      setAllWhite(rowNum);
+    } else {
+      var merged = []
+      for (var i = 0; i <= BOX_COUNT; i += 2*groupSize) {
+        var subarr1 = numArr.slice(i,i+groupSize);
+        var subarr2 = numArr.slice(i+groupSize, i+groupSize+groupSize);
+        merged = merged.concat(merge(subarr1,subarr2));
+      }
+      showArray(merged,rowNum);
+    }
+    groupSize *= 2;
+  }
+  //setTimeout(mergeFrame,500);
+  var interval = setInterval(mergeFrame,1000);
 }
 
 function quickSort(array) {
@@ -257,7 +318,13 @@ function highlightBoxes(boxNum_start,boxNum_end,rowNum) {
 function getArray(rowNum) {
   var numArr = [];
   for (var i = 1; i <= BOX_COUNT; i++) {
-    numArr.push(document.getElementById('row' + rowNum + 'box' + i).innerHTML);
+    numArr.push(Number(document.getElementById('row' + rowNum + 'box' + i).innerHTML));
   }
   return numArr;
+}
+
+function showArray(inputArr, rowNum) {
+  for (var i = 1; i <= BOX_COUNT; i++) {
+    document.getElementById('row' + rowNum + 'box' + i).innerHTML = String(inputArr[i-1]);
+  }
 }
