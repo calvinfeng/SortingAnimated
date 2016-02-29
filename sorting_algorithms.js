@@ -56,7 +56,9 @@ function shuffle(rowNum) {
   }
   var interval = setInterval(frame,100);
 }
+
 // Sorting algorithms ==========================================================
+
 function bubbleSort(rowNum) {
   var startTime = new Date().getTime();
   var operationCount = 0;
@@ -210,7 +212,6 @@ function quickSort(array) {
     return leftWall.concat(pivot,rightWall);
   }
 }
-
 
 function testMerge() {
   arr = [];
