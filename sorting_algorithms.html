@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<link type="text/css" rel="stylesheet" href="sorting_algorithms.css"></link>
+<html>
+  <head>
+    <title>Sorting Algorithms</title>
+    <script type="text/javascript" src="sorting_algorithms.js" defer></script>
+  </head>
+  <body>
+    <h1>Sorting Algorithms</h1>
+    <h3>In here, we will use JavaScript to program and animate various sorting algorithms</h3>
+    <p>
+      Click the button below to generate a list of numbered boxes and use shuffle to randomize the numbers.
+    </p>
+    <div id='mainControl'>
+      <button class='hvr-pulse' id='generate' onclick="generateBoxes()">Generate Boxes</button>
+    </div>
+    <p>Shuffle first, then click to sort</p>
+    <p>Note: swapping occurs when boxes flash with dark yellow highlight</p>
+    <div id='control1'>
+      <button class='hvr-pulse' id='bubble' onclick="bubbleSort(1)">Bubble Sort</button>
+      <button class='hvr-pulse' id='shuffle1' onclick="shuffle(1)">Shuffle</button>
+      <button class='hvr-pulse' id='invert1' onclick="invert(1)">Invert</button>
+    </div>
+    <div id='boxrow1' class='boxrow'></div>
+    <div id='control2'>
+      <button class='hvr-pulse' id='insertion' onclick="insertionSort(2)" >Insertion Sort</button>
+      <button class='hvr-pulse' id='shuffle2' onclick="shuffle(2)">Shuffle</button>
+      <button class='hvr-pulse' id='invert2' onclick="invert(2)">Invert</button>
+    </div>
+    <div id='boxrow2' class='boxrow'></div>
+    <div id='control3'>
+      <button class='hvr-pulse' id='merge' onclick="testMerge()" >Test Merge Sort</button>
+      <button class='hvr-pulse' id='shuffle3' onclick="shuffle(3)">Shuffle</button>
+      <button class='hvr-pulse' id='invert3' onclick="invert(3)">Invert</button>
+    </div>
+    <div id='boxrow3' class='boxrow'></div>
+    <div id='control4'>
+      <button class='hvr-pulse' id='quick' onclick="testQuick()" >Test Quick Sort</button>
+      <button class='hvr-pulse' id='shuffle4' onclick="shuffle(4)">Shuffle</button>
+      <button class='hvr-pulse' id='invert4' onclick="invert(4)">Invert</button>
+    </div>
+    <div id='boxrow4' class='boxrow'></div>
+  </body>
+</html>
