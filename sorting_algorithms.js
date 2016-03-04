@@ -227,7 +227,7 @@ function highLightGroup(groupSize,rowNum) {
   }
 }
 
-function nonrecursiveMerge(rowNum) {
+function iterativeMergeSort(rowNum) {
   // Setup: divide elements into groups of 1, give them alternating colors
   var groupSize = 1;
   // Animate the process of merging small groups into bigger groups
