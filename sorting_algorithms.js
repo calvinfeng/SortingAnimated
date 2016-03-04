@@ -1,4 +1,4 @@
-const BOX_COUNT = 29;
+const BOX_COUNT = 32;
 const BOXROW_COUNT = 4;
 const DELAY_TIME = 100; //in millisecond
 
@@ -159,7 +159,7 @@ function insertionSort(rowNum) {
       console.log("Insertion sort has taken " + time + " seconds to complete execution.")
     }
   }
-  var interval = setInterval(frame,6*DELAY_TIME);
+  var interval = setInterval(frame,5*DELAY_TIME);
 }
 
 // Recursive merge sort
@@ -195,7 +195,7 @@ function merge(arr1, arr2) {
 
 function highLightGroup(groupSize,rowNum) {
   setAllWhite(rowNum);
-  var yellow = '#FAFAD2';
+  var yellow = '#FFFF1A';
   var orange = '#FCD116';
   // Divide elements into groups of 2,4,8,16,etc...
   // and give them alternating colors
@@ -250,7 +250,7 @@ function iterativeMergeSort(rowNum) {
     groupSize *= 2;
   }
   //setTimeout(mergeFrame,500);
-  var interval = setInterval(mergeFrame,1000);
+  var interval = setInterval(mergeFrame,8*DELAY_TIME);
 }
 
 function quickSort(array) {
@@ -272,6 +272,98 @@ function quickSort(array) {
     rightWall = quickSort(rightWall);
     return leftWall.concat(pivot,rightWall);
   }
+}
+
+function iterativeQuickSort(rowNum) {
+  // Stack is an array that holds multiple sub arrays
+  // Suppose we begin with [[4,2,3,1]], a sorted stack will look like this: [[1],[2],[3],[4]]
+  var stack = [getArray(rowNum)];
+  // Everytime frame is called, array with size greater than 1 will get be partitioned
+  // into subarrays, until all arrays in the stack have size 1.
+  function frame() {
+    setAllWhite(rowNum);
+    if (isStackSorted(stack)) {
+      clearInterval(interval)
+    } else {
+      for (var idx = 0; idx < stack.length; idx++) {
+        if (stack[idx].length > 1) {
+          var sub_arr = stack[idx];
+          var par_stack = partitionArray(sub_arr,idx,rowNum);
+          stack.splice(idx,1,par_stack.pop());
+          while (par_stack.length > 0) {
+            stack.splice(idx,0,par_stack.pop());
+          }
+          displayStack(stack,rowNum);
+          console.log(stack);
+          return true;
+        }
+      } // End of for-loop
+    } // End of if-statements
+  }
+  var interval = setInterval(frame,3*DELAY_TIME);
+}
+
+// Return a stack of partitioned arrays
+// Also, highlight the HTML elements
+function partitionArray(array, location_idx, rowNum) {
+  var red = '#E60000', lightBlue = '#B3DAFF', lightYellow = '#FFFF99';
+  var pivot = array.pop();
+  var left = [], right = [], stack = [];
+  for (var idx = 0; idx < array.length; idx++) {
+    if (array[idx] > pivot) {
+      right.push(array[idx]);
+    } else {
+      left.push(array[idx]);
+    }
+  }
+  //Highlight the boxes
+  var boxNum = location_idx + 1;
+  var idx = 0;
+  while (idx < left.length) {
+    var boxOnLeft = document.getElementById('row' + rowNum + 'box' + boxNum);
+    boxOnLeft.style.backgroundColor = lightYellow;
+    idx++;
+    boxNum++;
+  }
+  var pivotBox = document.getElementById('row' + rowNum + 'box' + boxNum);
+  pivotBox.style.backgroundColor = red;
+  boxNum++;
+
+  idx = 0;
+  while (idx < right.length) {
+    boxOnRight = document.getElementById('row' + rowNum + 'box' + boxNum);
+    boxOnRight.style.backgroundColor = lightBlue;
+    idx++;
+    boxNum++;
+  }
+  // Push, left, pivot, and right arrays into a stack
+  if (left.length == 0) {
+    stack.push([pivot],right);
+  } else if (right.length == 0) {
+    stack.push(left,[pivot]);
+  } else {
+    stack.push(left,[pivot],right);
+  }
+  return stack;
+}
+
+function displayStack(stack, rowNum) {
+  var boxNum = 1;
+  for (var i = 0; i < stack.length; i++) {
+    for (var j = 0; j < stack[i].length; j++) {
+      document.getElementById('row' + rowNum + 'box' + boxNum).innerHTML = stack[i][j];
+      boxNum++;
+    }
+  }
+}
+
+function isStackSorted(stack) {
+  for (var idx = 0; idx < stack.length; idx++) {
+    if (stack[idx].length > 1) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function testMerge() {
